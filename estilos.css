@@ -1,0 +1,324 @@
+body{
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #302e2e;
+}
+
+/* Estilos para el Header */
+header {
+    background-color: #302e2e; /* Fondo oscuro */
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+}
+
+#logokags {
+    border-radius: 10px; /* Redondea todas las esquinas */
+    height: 50px; /* Mantén el tamaño del logo */
+}
+
+#nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-y-enlaces {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espacio entre el logo y los enlaces */
+
+}
+
+#nav a {
+    color: #fff; /* Texto blanco */
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+#nav a:hover {
+    color: #e5cc2b; /* Amarillo dorado al pasar el mouse */
+}
+
+#logokags {
+    height: 50px; /* Tamaño del logo */
+}
+
+.redes-sociales {
+    display: flex;
+    gap: 15px; /* Espacio entre íconos de redes sociales */
+}
+
+.redes-sociales a {
+    color: #fff; /* Color blanco para los íconos */
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+.redes-sociales a:hover {
+    color: #e5cc2b; /* Amarillo dorado al pasar el mouse */
+}
+
+/* Estilos para la sección "Inicio" */
+#inicio {
+    background-image: url('imagenes/fondo-inicio.jpg'); /* Imagen de fondo */
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    margin-top: 60px; /* Para evitar que el banner quede detrás del menú */
+}
+
+#inicio::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Overlay oscuro para mejorar la legibilidad */
+}
+
+.banner-texto {
+    position: relative;
+    z-index: 1;
+}
+
+.titulo-banner {
+    font-size: 60px;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para el texto */
+}
+
+.subtitulo-banner {
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-family: 'Open Sans', sans-serif; /* Fuente legible */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para el texto */
+}
+
+.boton-banner {
+    background-color: #e5cc2b; /* Amarillo dorado */
+    color: #302e2e; /* Color oscuro para el texto */
+    padding: 15px 30px;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
+    text-decoration: none;
+    border-radius: 30px; /* Bordes redondeados */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.boton-banner:hover {
+    background-color: #d4b820; /* Amarillo más oscuro al pasar el mouse */
+    transform: translateY(-5px); /* Efecto de levantar el botón */
+}
+
+/* Estilos para la sección "Sobre Nosotros" */
+#nosotros {
+    display: flex;
+    align-items: center;
+    padding: 60px 20px;
+    background-color: #1e1e1e; /* Fondo oscuro para resaltar el contenido */
+    color: #fff; /* Texto blanco */
+}
+
+.cont-img {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cont-img img {
+    max-width: 80%;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra para dar profundidad */
+}
+
+.cont-texto {
+    flex: 1;
+    padding: 0 40px;
+}
+
+.cont-texto h2 {
+    font-size: 36px;
+    color: #e5cc2b; /* Amarillo dorado para el título */
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
+}
+
+.cont-texto p {
+    font-size: 18px;
+    line-height: 1.8; /* Espaciado entre líneas para mejor legibilidad */
+    color: #f0f0f0; /* Texto gris claro */
+    font-family: 'Open Sans', sans-serif; /* Fuente legible */
+}
+
+.destacado {
+    color: #e5cc2b; /* Resaltar el nombre de la marca en amarillo */
+    font-weight: bold;
+}
+
+/* Efecto hover para la imagen */
+.cont-img img:hover {
+    transform: scale(1.05); /* Ligero zoom al pasar el mouse */
+    transition: transform 0.3s ease;
+}
+
+/* Estilos para la sección "Servicios" */
+#servicios {
+    padding: 80px 20px;
+    background-color: #f4f4f4; /* Fondo claro para contrastar */
+    text-align: center;
+}
+
+#servicios h2 {
+    font-size: 40px;
+    color: #e5cc2b; /* Amarillo dorado para el título */
+    margin-bottom: 40px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px; /* Espacio entre tarjetas */
+}
+
+.columna-4 {
+    flex: 1;
+    max-width: 25%;
+    min-width: 250px; /* Ancho mínimo para evitar que se vean muy pequeñas */
+}
+
+.card {
+    background-color: #fff; /* Fondo blanco para las tarjetas */
+    padding: 20px;
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Efecto de levantar la tarjeta */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+}
+
+.card img {
+    width: 120px; /* Tamaño adecuado para las imágenes */
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    font-size: 24px;
+    color: #302e2e; /* Color oscuro para el título */
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
+}
+
+.card p {
+    font-size: 16px;
+    color: #666; /* Color gris para el texto */
+    line-height: 1.6; /* Espaciado entre líneas */
+    margin-bottom: 10px;
+    font-family: 'Open Sans', sans-serif; /* Fuente legible */
+}
+
+.precio {
+    font-size: 18px;
+    color: #e5cc2b; /* Amarillo dorado para el precio */
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Estilos para el Footer */
+footer {
+    background-color: #302e2e; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    padding: 40px 20px;
+    font-family: 'Open Sans', sans-serif; /* Fuente legible */
+}
+
+.footer-contenido {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-seccion {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 20px;
+}
+
+.footer-seccion h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #e5cc2b; /* Amarillo dorado para los títulos */
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
+}
+
+.footer-seccion p, .footer-seccion ul {
+    font-size: 14px;
+    color: #f0f0f0; /* Texto gris claro */
+    line-height: 1.8;
+}
+
+.footer-seccion ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-seccion ul li {
+    margin-bottom: 10px;
+}
+
+.footer-seccion ul li a {
+    color: #f0f0f0; /* Texto gris claro */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-seccion ul li a:hover {
+    color: #e5cc2b; /* Amarillo dorado al pasar el mouse */
+}
+
+.redes-sociales {
+    display: flex;
+    gap: 15px;
+}
+
+.redes-sociales a {
+    color: #fff; /* Color blanco para los íconos */
+    font-size: 24px;
+    transition: color 0.3s ease;
+}
+
+.redes-sociales a:hover {
+    color: #e5cc2b; /* Amarillo dorado al pasar el mouse */
+}
+
+.footer-derechos {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #444; /* Línea divisoria */
+    font-size: 14px;
+    color: #f0f0f0; /* Texto gris claro */
+}
