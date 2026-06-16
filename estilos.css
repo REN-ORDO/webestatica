@@ -1,167 +1,85 @@
-```css
-/* General improvements for UI/UX, Responsivity, Accessibility, and Consistency */
-
-/* 1. Root Variables for Consistency and Easy Maintenance */
-:root {
-    --primary-color: #302e2e; /* Dark grey */
-    --secondary-color: #1e1e1e; /* Even darker grey */
-    --accent-color: #e5cc2b; /* Gold/Yellow */
-    --text-light: #fff;
-    --text-dark: #302e2e;
-    --text-muted: #f0f0f0; /* Lighter grey for subtle text */
-    --background-light: #f4f4f4; /* Light background for contrast sections */
-    --font-poppins: 'Poppins', sans-serif;
-    --font-open-sans: 'Open Sans', sans-serif;
-    --spacing-xs: 8px;
-    --spacing-sm: 16px;
-    --spacing-md: 32px;
-    --spacing-lg: 64px;
-    --spacing-xl: 96px;
-    --max-width: 1200px;
-}
-
-/* 2. Global Reset and Accessibility Enhancements */
-*, *::before, *::after {
-    box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
+body{
     margin: 0;
-    padding: 0;
-}
-
-html {
-    scroll-behavior: smooth; /* Smooth scrolling for anchor links */
-}
-
-body {
-    font-family: var(--font-open-sans); /* Use Open Sans as default for body text */
-    background-color: var(--primary-color);
-    color: var(--text-light);
-    line-height: 1.6; /* Improved readability */
-    -webkit-font-smoothing: antialiased; /* Better font rendering for WebKit browsers */
-    -moz-osx-font-smoothing: grayscale; /* Better font rendering for Firefox */
-}
-
-a {
-    color: var(--text-light);
-    text-decoration: none;
-    transition: color 0.3s ease; /* Smooth color transition on hover */
-}
-
-a:hover {
-    color: var(--accent-color);
-}
-
-/* Accessibility: Focus states - only show outline when relevant (keyboard navigation) */
-*:focus-visible {
-    outline: 2px solid var(--accent-color);
-    outline-offset: 3px;
-    border-radius: 3px; /* Apply rounded corners to outline where appropriate */
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #302e2e;
 }
 
 /* Estilos para el Header */
 header {
-    background-color: var(--primary-color);
-    padding: var(--spacing-sm) var(--spacing-sm);
+    background-color: #302e2e; /* Fondo oscuro */
+    padding: 10px 20px;
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
 }
 
 #logokags {
-    border-radius: 10px;
-    height: 50px;
-    vertical-align: middle; /* Align logo with text if present */
+    border-radius: 10px; /* Redondea todas las esquinas */
+    height: 50px; /* Mantén el tamaño del logo */
 }
 
 #nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: var(--max-width);
+    max-width: 1200px;
     margin: 0 auto;
-    position: relative; /* For positioning hamburger menu content */
 }
 
 .logo-y-enlaces {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 20px; /* Espacio entre el logo y los enlaces */
+
 }
 
-/* Navigation links container - default to flex for larger screens */
-.nav-links-container {
-    display: flex;
-    gap: var(--spacing-sm);
-    margin-left: var(--spacing-sm); /* Spacing between logo and links */
+#nav a {
+    color: #fff; /* Texto blanco */
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
 }
 
-.nav-links-container a {
-    color: var(--text-light);
-    font-size: 1rem; /* Consistent font size */
-    font-weight: 600; /* Bolder text for navigation */
-    padding: var(--spacing-xs) var(--spacing-sm); /* Add padding for larger click area */
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+#nav a:hover {
+    color: #e5cc2b; /* Amarillo dorado al pasar el mouse */
 }
 
-.nav-links-container a:hover {
-    color: var(--accent-color);
-    background-color: rgba(229, 204, 43, 0.1); /* Subtle background hover effect */
+#logokags {
+    height: 50px; /* Tamaño del logo */
 }
 
 .redes-sociales {
     display: flex;
-    gap: var(--spacing-sm);
+    gap: 15px; /* Espacio entre íconos de redes sociales */
 }
 
 .redes-sociales a {
-    color: var(--text-light);
-    font-size: 1.5rem; /* Larger icons for better visibility */
-    padding: var(--spacing-xs); /* Make click area larger */
-    border-radius: 50%; /* Circular background for icons */
-    transition: background-color 0.3s ease, color 0.3s ease;
+    color: #fff; /* Color blanco para los íconos */
+    font-size: 20px;
+    transition: color 0.3s ease;
 }
 
 .redes-sociales a:hover {
-    color: var(--accent-color);
-    background-color: rgba(229, 204, 43, 0.1);
+    color: #e5cc2b; /* Amarillo dorado al pasar el mouse */
 }
 
-/* Hamburger menu for mobile - hidden by default */
-.hamburger-menu {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: var(--text-light);
-    cursor: pointer;
-    padding: var(--spacing-xs);
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.hamburger-menu:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Estilos para la sección "Inicio" (Hero Section) */
+/* Estilos para la sección "Inicio" */
 #inicio {
-    background-image: url('imagenes/fondo-inicio.jpg');
+    background-image: url('imagenes/fondo-inicio.jpg'); /* Imagen de fondo */
     background-size: cover;
     background-position: center;
-    min-height: 500px; /* Use min-height for flexibility */
+    height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--text-light);
+    color: #fff;
     text-align: center;
     position: relative;
-    margin-top: 60px; /* Offset for fixed header */
-    padding: var(--spacing-lg) var(--spacing-sm); /* Responsive padding */
+    margin-top: 60px; /* Para evitar que el banner quede detrás del menú */
 }
 
-/* Dark overlay for better text readability on hero image */
 #inicio::before {
     content: '';
     position: absolute;
@@ -169,63 +87,51 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
-    z-index: 0; /* Ensure text is above overlay */
+    background-color: rgba(0, 0, 0, 0.5); /* Overlay oscuro para mejorar la legibilidad */
 }
 
 .banner-texto {
     position: relative;
     z-index: 1;
-    max-width: 800px; /* Limit width for readability */
 }
 
 .titulo-banner {
-    font-size: 4rem; /* Use rem for scalability */
-    margin-bottom: var(--spacing-sm);
-    font-family: var(--font-poppins);
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7); /* Stronger shadow for impact */
-    line-height: 1.2;
+    font-size: 60px;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para el texto */
 }
 
 .subtitulo-banner {
-    font-size: 1.5rem;
-    margin-bottom: var(--spacing-md);
-    font-family: var(--font-open-sans);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    opacity: 0.9; /* Slightly softer text */
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-family: 'Open Sans', sans-serif; /* Fuente legible */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para el texto */
 }
 
 .boton-banner {
-    background-color: var(--accent-color);
-    color: var(--text-dark);
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 1.1rem;
-    font-family: var(--font-poppins);
-    font-weight: 600;
+    background-color: #e5cc2b; /* Amarillo dorado */
+    color: #302e2e; /* Color oscuro para el texto */
+    padding: 15px 30px;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
     text-decoration: none;
-    border-radius: 30px;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Initial shadow for depth */
-    display: inline-block; /* Essential for transform properties */
+    border-radius: 30px; /* Bordes redondeados */
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .boton-banner:hover {
-    background-color: #d4b820; /* Slightly darker yellow on hover */
-    transform: translateY(-5px) scale(1.02); /* Lift and slightly enlarge */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    background-color: #d4b820; /* Amarillo más oscuro al pasar el mouse */
+    transform: translateY(-5px); /* Efecto de levantar el botón */
 }
 
 /* Estilos para la sección "Sobre Nosotros" */
 #nosotros {
     display: flex;
-    flex-direction: row; /* Default layout for larger screens */
     align-items: center;
-    padding: var(--spacing-xl) var(--spacing-md);
-    background-color: var(--secondary-color);
-    color: var(--text-light);
-    max-width: var(--max-width);
-    margin: 0 auto;
-    gap: var(--spacing-lg); /* Spacing between image and text */
+    padding: 60px 20px;
+    background-color: #1e1e1e; /* Fondo oscuro para resaltar el contenido */
+    color: #fff; /* Texto blanco */
 }
 
 .cont-img {
@@ -233,205 +139,144 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: var(--spacing-sm);
 }
 
 .cont-img img {
-    max-width: 100%; /* Ensure image scales within its container */
-    height: auto; /* Maintain aspect ratio */
+    max-width: 80%;
     border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Stronger shadow for depth */
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.cont-img img:hover {
-    transform: scale(1.03); /* Subtle zoom effect */
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra para dar profundidad */
 }
 
 .cont-texto {
     flex: 1;
-    padding: var(--spacing-sm);
+    padding: 0 40px;
 }
 
 .cont-texto h2 {
-    font-size: 2.5rem; /* Rem for scalability */
-    color: var(--accent-color);
-    margin-bottom: var(--spacing-sm);
-    font-family: var(--font-poppins);
-    font-weight: 700; /* Bolder title */
+    font-size: 36px;
+    color: #e5cc2b; /* Amarillo dorado para el título */
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
 }
 
 .cont-texto p {
-    font-size: 1.1rem; /* Slightly larger text for readability */
-    line-height: 1.8;
-    color: var(--text-muted);
-    font-family: var(--font-open-sans);
+    font-size: 18px;
+    line-height: 1.8; /* Espaciado entre líneas para mejor legibilidad */
+    color: #f0f0f0; /* Texto gris claro */
+    font-family: 'Open Sans', sans-serif; /* Fuente legible */
 }
 
 .destacado {
-    color: var(--accent-color);
+    color: #e5cc2b; /* Resaltar el nombre de la marca en amarillo */
     font-weight: bold;
 }
 
-/* Estilos para la sección "Servicios" (Product Cards) */
+/* Efecto hover para la imagen */
+.cont-img img:hover {
+    transform: scale(1.05); /* Ligero zoom al pasar el mouse */
+    transition: transform 0.3s ease;
+}
+
+/* Estilos para la sección "Servicios" */
 #servicios {
-    padding: var(--spacing-xl) var(--spacing-md);
-    background-color: var(--background-light); /* Light background for contrast */
+    padding: 80px 20px;
+    background-color: #f4f4f4; /* Fondo claro para contrastar */
     text-align: center;
-    color: var(--text-dark); /* Default text color for light background */
 }
 
 #servicios h2 {
-    font-size: 3rem;
-    color: var(--primary-color); /* Darker color for title on light background */
-    margin-bottom: var(--spacing-lg);
-    font-family: var(--font-poppins);
-    font-weight: 700;
+    font-size: 40px;
+    color: #e5cc2b; /* Amarillo dorado para el título */
+    margin-bottom: 40px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
 }
 
 .flex-container {
     display: flex;
-    justify-content: center; /* Center cards when fewer items */
+    justify-content: space-around;
     flex-wrap: wrap;
-    gap: var(--spacing-md); /* Consistent gap between cards */
-    max-width: var(--max-width);
-    margin: 0 auto; /* Center the container */
+    gap: 20px; /* Espacio entre tarjetas */
 }
 
 .columna-4 {
-    flex: 0 1 calc(33% - var(--spacing-md) * 2 / 3); /* 3 items per row, accounting for gap */
-    min-width: 280px; /* Slightly increased min-width for cards */
+    flex: 1;
+    max-width: 25%;
+    min-width: 250px; /* Ancho mínimo para evitar que se vean muy pequeñas */
 }
 
 .card {
-    background-color: var(--text-light);
-    padding: var(--spacing-md);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%; /* Ensure cards have equal height in a row */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Push price to bottom */
+    background-color: #fff; /* Fondo blanco para las tarjetas */
+    padding: 20px;
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
 }
 
 .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Stronger hover shadow */
+    transform: translateY(-10px); /* Efecto de levantar la tarjeta */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
 }
 
 .card img {
-    max-width: 150px; /* Slightly larger images for products */
-    height: auto;
-    margin: 0 auto var(--spacing-sm); /* Center image, use variable spacing */
-    display: block; /* For margin auto to work */
-    object-fit: contain; /* Ensure image fits without cropping */
+    width: 120px; /* Tamaño adecuado para las imágenes */
+    margin-bottom: 20px;
 }
 
 .card h3 {
-    font-size: 1.6rem; /* Rem for scalability */
-    color: var(--primary-color);
-    margin-bottom: var(--spacing-xs);
-    font-family: var(--font-poppins);
-    font-weight: 600;
+    font-size: 24px;
+    color: #302e2e; /* Color oscuro para el título */
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
 }
 
 .card p {
-    font-size: 1rem;
-    color: #555; /* Slightly darker grey for better contrast on light background */
-    line-height: 1.6;
-    margin-bottom: var(--spacing-sm);
-    font-family: var(--font-open-sans);
-    flex-grow: 1; /* Allow description to take available space */
+    font-size: 16px;
+    color: #666; /* Color gris para el texto */
+    line-height: 1.6; /* Espaciado entre líneas */
+    margin-bottom: 10px;
+    font-family: 'Open Sans', sans-serif; /* Fuente legible */
 }
 
 .precio {
-    font-size: 1.2rem;
-    color: var(--accent-color);
+    font-size: 18px;
+    color: #e5cc2b; /* Amarillo dorado para el precio */
     font-weight: bold;
-    margin-top: auto; /* Push price to the bottom */
-}
-
-/* Estilos para la sección de Contacto (nueva) */
-.contact-section {
-    background-color: var(--primary-color);
-    padding: var(--spacing-xl) var(--spacing-md);
-    text-align: center;
-    color: var(--text-light);
-}
-
-.contact-content {
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.contact-section h2 {
-    font-size: 3rem;
-    color: var(--accent-color);
-    margin-bottom: var(--spacing-lg);
-    font-family: var(--font-poppins);
-    font-weight: 700;
-}
-
-.contact-section p {
-    font-size: 1.1rem;
-    margin-bottom: var(--spacing-md);
-    color: var(--text-muted);
-}
-
-.contact-info p {
-    font-size: 1rem;
-    margin-bottom: var(--spacing-xs);
-    color: var(--text-muted);
-}
-
-.contact-info i {
-    margin-right: var(--spacing-xs);
-    color: var(--accent-color);
-    font-size: 1.2rem;
-}
-
-/* Reuse .redes-sociales styles from header/footer */
-.contact-section .redes-sociales {
-    justify-content: center;
-    margin-top: var(--spacing-md);
+    margin-top: 10px;
 }
 
 /* Estilos para el Footer */
 footer {
-    background-color: var(--secondary-color); /* Slightly darker footer for distinction */
-    color: var(--text-light);
-    padding: var(--spacing-lg) var(--spacing-md);
-    font-family: var(--font-open-sans);
+    background-color: #302e2e; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    padding: 40px 20px;
+    font-family: 'Open Sans', sans-serif; /* Fuente legible */
 }
 
 .footer-contenido {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    gap: var(--spacing-md);
-    max-width: var(--max-width);
+    gap: 20px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
 .footer-seccion {
     flex: 1;
-    min-width: 220px; /* Ensures sections don't become too narrow */
-    margin-bottom: var(--spacing-sm);
+    min-width: 200px;
+    margin-bottom: 20px;
 }
 
 .footer-seccion h3 {
-    font-size: 1.3rem; /* Rem for scalability */
-    margin-bottom: var(--spacing-sm);
-    color: var(--accent-color);
-    font-family: var(--font-poppins);
-    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #e5cc2b; /* Amarillo dorado para los títulos */
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
 }
 
 .footer-seccion p, .footer-seccion ul {
-    font-size: 0.95rem; /* Slightly smaller text for footer details */
-    color: var(--text-muted);
+    font-size: 14px;
+    color: #f0f0f0; /* Texto gris claro */
     line-height: 1.8;
 }
 
@@ -441,262 +286,39 @@ footer {
 }
 
 .footer-seccion ul li {
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: 10px;
 }
 
 .footer-seccion ul li a {
-    color: var(--text-muted);
+    color: #f0f0f0; /* Texto gris claro */
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 .footer-seccion ul li a:hover {
-    color: var(--accent-color);
+    color: #e5cc2b; /* Amarillo dorado al pasar el mouse */
 }
 
-/* Footer social media icons */
-footer .redes-sociales {
+.redes-sociales {
     display: flex;
-    gap: var(--spacing-sm);
+    gap: 15px;
 }
 
-footer .redes-sociales a {
-    color: var(--text-light);
-    font-size: 1.5rem; /* Consistent icon size */
-    padding: var(--spacing-xs);
-    border-radius: 50%;
-    transition: background-color 0.3s ease, color 0.3s ease;
+.redes-sociales a {
+    color: #fff; /* Color blanco para los íconos */
+    font-size: 24px;
+    transition: color 0.3s ease;
 }
 
-footer .redes-sociales a:hover {
-    color: var(--accent-color);
-    background-color: rgba(229, 204, 43, 0.1);
+.redes-sociales a:hover {
+    color: #e5cc2b; /* Amarillo dorado al pasar el mouse */
 }
 
 .footer-derechos {
     text-align: center;
-    margin-top: var(--spacing-md);
-    padding-top: var(--spacing-md);
-    border-top: 1px solid #444; /* Subtle separator */
-    font-size: 0.9rem;
-    color: var(--text-muted);
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #444; /* Línea divisoria */
+    font-size: 14px;
+    color: #f0f0f0; /* Texto gris claro */
 }
-
-/* 3. Responsivity - Media Queries for improved UI/UX on different screen sizes */
-
-/* Tablet and smaller laptops (e.g., screens up to 992px wide) */
-@media (max-width: 992px) {
-    #nav {
-        flex-wrap: wrap; /* Allow nav items to wrap */
-        justify-content: center; /* Center items for clarity */
-    }
-
-    .logo-y-enlaces {
-        flex-basis: 100%; /* Logo and nav links take full width */
-        justify-content: center;
-        margin-bottom: var(--spacing-sm);
-        gap: var(--spacing-sm);
-    }
-
-    .nav-links-container {
-        flex-basis: 100%;
-        justify-content: center;
-        margin-left: 0; /* Remove left margin */
-        gap: var(--spacing-xs); /* Tighter spacing for links */
-    }
-
-    .redes-sociales {
-        flex-basis: 100%;
-        justify-content: center;
-        margin-top: var(--spacing-sm);
-    }
-    
-    .hamburger-menu {
-        /* On tablet, keep hamburger menu hidden if nav links are shown inline */
-        /* display: none; */ 
-    }
-
-    .titulo-banner {
-        font-size: 3rem;
-    }
-
-    .subtitulo-banner {
-        font-size: 1.3rem;
-    }
-
-    #nosotros {
-        flex-direction: column; /* Stack image and text vertically */
-        text-align: center;
-        padding: var(--spacing-lg) var(--spacing-sm);
-        gap: var(--spacing-md);
-    }
-
-    .cont-img {
-        padding: 0; /* Remove extra padding */
-        margin-bottom: var(--spacing-md);
-    }
-    .cont-img img {
-        max-width: 90%; /* Adjust image size */
-    }
-
-    .cont-texto {
-        padding: 0 var(--spacing-sm); /* Adjust padding */
-    }
-    .cont-texto h2 {
-        font-size: 2rem;
-    }
-    .cont-texto p {
-        font-size: 1rem;
-    }
-
-    #servicios h2, .contact-section h2 {
-        font-size: 2.5rem;
-    }
-
-    .columna-4 {
-        flex: 0 1 calc(50% - var(--spacing-md) / 2); /* 2 items per row, accounting for gap */
-    }
-
-    .footer-contenido {
-        justify-content: center;
-        text-align: center;
-    }
-
-    .footer-seccion {
-        min-width: 250px; /* Allow sections to be larger if needed */
-    }
-    footer .redes-sociales {
-        justify-content: center;
-    }
-}
-
-/* Mobile devices (e.g., screens up to 768px wide) */
-@media (max-width: 768px) {
-    #nav {
-        flex-wrap: nowrap; /* Prevent wrapping in nav on small screens */
-        justify-content: space-between;
-        padding: var(--spacing-sm) var(--spacing-xs);
-    }
-
-    .logo-y-enlaces {
-        flex-basis: auto; /* Revert flex-basis */
-        justify-content: flex-start; /* Align logo to start */
-        margin-bottom: 0;
-    }
-
-    .nav-links-container {
-        display: none; /* Hide nav links by default on mobile, to be toggled by JS */
-        flex-direction: column;
-        position: absolute;
-        top: 100%; /* Position below header */
-        left: 0;
-        width: 100%;
-        background-color: var(--primary-color);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        padding: var(--spacing-sm) 0;
-        z-index: 999;
-        /* .nav-links-container.active { display: flex; } would be added by JavaScript */
-    }
-
-    .nav-links-container a {
-        padding: var(--spacing-sm) var(--spacing-md);
-        text-align: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .nav-links-container a:last-child {
-        border-bottom: none;
-    }
-
-    .redes-sociales {
-        display: none; /* Hide social icons in header on mobile, can be moved to menu or footer */
-    }
-
-    .hamburger-menu {
-        display: block; /* Show hamburger menu icon */
-    }
-
-    #inicio {
-        min-height: 400px;
-        margin-top: 60px; /* Adjust based on header height */
-        padding: var(--spacing-md) var(--spacing-xs);
-    }
-
-    .titulo-banner {
-        font-size: 2.5rem;
-    }
-
-    .subtitulo-banner {
-        font-size: 1.1rem;
-    }
-
-    .boton-banner {
-        padding: var(--spacing-xs) var(--spacing-md);
-        font-size: 1rem;
-    }
-
-    #nosotros, #servicios, .contact-section, footer {
-        padding: var(--spacing-lg) var(--spacing-sm);
-    }
-
-    #nosotros {
-        gap: var(--spacing-md);
-    }
-
-    .cont-texto h2 {
-        font-size: 1.8rem;
-    }
-
-    #servicios h2, .contact-section h2 {
-        font-size: 2rem;
-        margin-bottom: var(--spacing-md);
-    }
-
-    .columna-4 {
-        flex: 0 1 100%; /* 1 item per row on mobile */
-        max-width: 350px; /* Constrain card width for better readability */
-        margin: 0 auto; /* Center individual cards */
-    }
-
-    .footer-seccion {
-        min-width: 100%;
-        text-align: center;
-    }
-    footer .redes-sociales {
-        justify-content: center;
-        margin-top: var(--spacing-sm);
-    }
-}
-
-/* Extra small devices (e.g., phones, up to 480px wide) */
-@media (max-width: 480px) {
-    .titulo-banner {
-        font-size: 2rem;
-    }
-    .subtitulo-banner {
-        font-size: 1rem;
-    }
-    .boton-banner {
-        font-size: 0.9rem;
-        padding: 10px 20px;
-    }
-
-    #logokags {
-        height: 40px; /* Smaller logo on very small screens */
-    }
-
-    .cont-texto h2 {
-        font-size: 1.6rem;
-    }
-
-    #servicios h2, .contact-section h2 {
-        font-size: 1.8rem;
-    }
-
-    .card h3 {
-        font-size: 1.4rem;
-    }
-
-    .card img {
-        max-width: 100px; /* Smaller images in cards */
-    }
-}
-```
