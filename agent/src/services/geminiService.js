@@ -91,10 +91,11 @@ ${css.substring(0, 500)}
 Responde EXACTAMENTE en este formato (dos secciones):
 
 ---RESUMEN---
-(Escribe aquí en lenguaje simple, sin términos técnicos, como si se lo explicaras al dueño del negocio:
-- QUÉ va a cambiar visualmente en el sitio y POR QUÉ mejora la experiencia del usuario
-- QUÉ NO cambia y permanece igual
-Máximo 4 oraciones en total.)
+(Escribe aquí en lenguaje simple, sin términos técnicos, como si se lo explicaras al dueño del negocio. Cubre:
+- QUÉ cambia visualmente (lo que el usuario ve en pantalla)
+- QUÉ cambia funcionalmente (cómo se comporta el sitio, flujos, interacciones)
+- QUÉ NO cambia y permanece igual (tanto visual como funcional)
+Máximo 5 oraciones en total. Sin jerga técnica.)
 
 ---TECNICO---
 (Escribe aquí el plan técnico detallado con los cambios específicos de HTML y CSS.)
