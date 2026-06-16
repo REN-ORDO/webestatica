@@ -29,26 +29,44 @@ function getProjectContext() {
   return { html, css };
 }
 
-async function callGemini(prompt) {
-  try {
-    const response = await axios.post(
-      `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
-      {
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt
-              }
-            ]
-          }
-        ]
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function callGemini(prompt, maxRetries = 4) {
+  let lastErr;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await axios.post(
+        `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
+        {
+          contents: [
+            {
+              parts: [
+                {
+                  text: prompt
+                }
+              ]
+            }
+          ]
+        }
+      );
+      return response.data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    } catch (err) {
+      lastErr = err;
+      const status = err.response?.status;
+
+      // Reintentar solo en errores transitorios (503 sobrecarga, 429 rate limit, 500)
+      if ([429, 500, 503].includes(status) && attempt < maxRetries) {
+        const delay = Math.min(2000 * 2 ** (attempt - 1), 16000); // 2s, 4s, 8s, 16s
+        console.log(`   ⏳ Gemini ${status}, reintento ${attempt}/${maxRetries - 1} en ${delay / 1000}s...`);
+        await sleep(delay);
+        continue;
       }
-    );
-    return response.data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  } catch (err) {
-    throw new Error(`Gemini API error: ${err.message}`);
+      break;
+    }
   }
+
+  throw new Error(`Gemini API error: ${lastErr.message}`);
 }
 
 export async function generatePlan(taskTitle, taskDescription) {
