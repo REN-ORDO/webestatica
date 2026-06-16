@@ -73,13 +73,13 @@ export async function generatePlan(taskTitle, taskDescription) {
   const { html, css } = getProjectContext();
 
   const prompt = `
-Eres un asistente de desarrollo front-end experto. Analiza la siguiente solicitud y genera un plan detallado.
+Eres un asistente de desarrollo web. Analiza esta solicitud de cambio en un sitio web y genera dos secciones separadas.
 
 SOLICITUD:
 Título: ${taskTitle}
 Descripción: ${taskDescription}
 
-ESTADO ACTUAL DEL PROYECTO:
+SITIO ACTUAL (fragmento):
 \`\`\`html
 ${html.substring(0, 1000)}
 \`\`\`
@@ -88,15 +88,24 @@ ${html.substring(0, 1000)}
 ${css.substring(0, 500)}
 \`\`\`
 
-Por favor genera un plan paso a paso de cómo implementar esta solicitud. Sé específico sobre:
-- Qué elementos HTML necesitan agregarse o modificarse
-- Qué estilos CSS se necesitan
-- Dónde exactamente se harán los cambios
+Responde EXACTAMENTE en este formato (dos secciones):
 
-Responde en formato markdown estructurado.
+---RESUMEN---
+(Escribe aquí 2-3 oraciones en lenguaje simple, sin términos técnicos, explicando QUÉ va a cambiar visualmente en el sitio y POR QUÉ mejora la experiencia del usuario. Como si se lo explicaras al dueño del negocio.)
+
+---TECNICO---
+(Escribe aquí el plan técnico detallado con los cambios específicos de HTML y CSS.)
   `;
 
-  return await callGemini(prompt);
+  const raw = await callGemini(prompt);
+
+  const resumenMatch = raw.match(/---RESUMEN---([\s\S]*?)---TECNICO---/);
+  const tecnicoMatch = raw.match(/---TECNICO---([\s\S]*?)$/);
+
+  return {
+    resumen: resumenMatch?.[1]?.trim() || raw,
+    tecnico: tecnicoMatch?.[1]?.trim() || raw
+  };
 }
 
 export async function generateCode(taskTitle, taskDescription, feedback = '') {

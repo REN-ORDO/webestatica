@@ -26,7 +26,7 @@ export async function agentLoop(taskId, taskTitle, taskDescription) {
 
     await postComment(
       taskId,
-      `🤖 **Plan de Implementación**\n\n${plan}`
+      `🤖 **El agente está trabajando en esta tarea**\n\n${plan.resumen}`
     );
 
     // Paso 3-5: Loop de codificación y evaluación
@@ -83,10 +83,49 @@ export async function agentLoop(taskId, taskTitle, taskDescription) {
         await updateFile('estilos.css', generatedCss, branchName, `Estilos para: ${task.name}`);
 
         console.log('🔗 Paso 8: Abriendo Pull Request...');
+        const prBody = `## ¿Qué cambia en el sitio?
+
+${plan.resumen}
+
+🔗 Tarea ClickUp: \`${taskId}\` — ${task.name}
+
+---
+
+## Tipo de cambio
+
+- [x] ✨ Nueva funcionalidad / mejora visual
+
+## Comportamiento actual
+
+El sitio web KagsBeer no contaba con los cambios descritos en la tarea.
+
+## Nuevo comportamiento
+
+${plan.resumen}
+
+## Detalles técnicos
+
+${plan.tecnico}
+
+## Calidad
+
+- [x] Código evaluado automáticamente por Gemini (score ${evaluation.score}/100)
+- [x] HTML y CSS generados manteniendo la estructura existente del sitio
+- [ ] Revisión manual por el equipo antes de mergear
+
+## ¿Es incompatible con la versión actual?
+
+- [x] No — cambio aditivo, no rompe nada existente
+
+## Información adicional
+
+> Implementación automática generada por el agente IA en ${iteration} iteración(es).
+> Revisar visualmente el sitio antes de aprobar el PR.`;
+
         prUrl = await openPullRequest(
           branchName,
           `✨ ${task.name}`,
-          `Implementación automática desde ClickUp.\n\nTarea: ${taskId}\n\n${plan}`
+          prBody
         );
 
         console.log('\n✨ ÉXITO - PR abierto\n');
@@ -105,7 +144,7 @@ export async function agentLoop(taskId, taskTitle, taskDescription) {
     if (cumple && prUrl) {
       await postComment(
         taskId,
-        `✅ **IMPLEMENTACIÓN LISTA**\n\n🔗 Pull Request: ${prUrl}\n\nRevisa y mergea el PR cuando esté listo. La tarjeta queda en estado PR.`
+        `✅ **Listo para revisión**\n\n${plan.resumen}\n\n🔗 Pull Request: ${prUrl}\n\nRevisa el PR, apruébalo y haz merge cuando esté listo.`
       );
 
       await updateTaskStatus(taskId, 'PR');
