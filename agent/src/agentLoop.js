@@ -2,6 +2,9 @@ import { getTask, postComment, updateTaskStatus } from './services/clickupServic
 import { generatePlan, generateCode, evaluateCode } from './services/geminiService.js';
 import { getRepoContext, createBranch, updateFile, openPullRequest } from './services/githubService.js';
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const GEMINI_COOLDOWN = 5000; // 5s entre llamadas a Gemini para no triggerear rate limit
+
 const MAX_ITERATIONS = parseInt(process.env.MAX_ITERATIONS) || 3;
 
 export async function agentLoop(taskId, taskTitle, taskDescription) {
@@ -37,6 +40,7 @@ export async function agentLoop(taskId, taskTitle, taskDescription) {
       console.log(`${'─'.repeat(60)}\n`);
 
       // Generar código
+      await sleep(GEMINI_COOLDOWN);
       console.log('💻 Generando código...');
       const codeResponse = await generateCode(
         task.name,
@@ -51,6 +55,7 @@ export async function agentLoop(taskId, taskTitle, taskDescription) {
       console.log('   ✓ Código generado\n');
 
       // Evaluar código
+      await sleep(GEMINI_COOLDOWN);
       console.log('🧪 Evaluando código generado...');
       const evaluation = await evaluateCode(
         generatedHtml,

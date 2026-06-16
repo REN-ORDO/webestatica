@@ -57,7 +57,9 @@ async function callGemini(prompt, maxRetries = 4) {
 
       // Reintentar solo en errores transitorios (503 sobrecarga, 429 rate limit, 500)
       if ([429, 500, 503].includes(status) && attempt < maxRetries) {
-        const delay = Math.min(2000 * 2 ** (attempt - 1), 16000); // 2s, 4s, 8s, 16s
+        // 429 rate limit necesita esperar más (60s base)
+        const base = status === 429 ? 15000 : 2000;
+        const delay = Math.min(base * 2 ** (attempt - 1), 60000); // 429: 15s, 30s, 60s | 503: 2s, 4s, 8s
         console.log(`   ⏳ Gemini ${status}, reintento ${attempt}/${maxRetries - 1} en ${delay / 1000}s...`);
         await sleep(delay);
         continue;
