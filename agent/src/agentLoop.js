@@ -105,11 +105,11 @@ export async function agentLoop(taskId, taskTitle, taskDescription) {
     if (cumple && prUrl) {
       await postComment(
         taskId,
-        `✅ **IMPLEMENTACIÓN COMPLETADA**\n\n🔗 Pull Request: ${prUrl}\n\nRevisa y mergea el PR cuando esté listo. La tarjeta se cerrará automáticamente.`
+        `✅ **IMPLEMENTACIÓN LISTA**\n\n🔗 Pull Request: ${prUrl}\n\nRevisa y mergea el PR cuando esté listo. La tarjeta queda en estado PR.`
       );
 
-      await updateTaskStatus(taskId, 'Completado');
-      console.log('\n🎉 TAREA COMPLETADA Y CERRADA EN CLICKUP\n');
+      await updateTaskStatus(taskId, 'PR');
+      console.log('\n🎉 TAREA MOVIDA A PR EN CLICKUP\n');
     } else {
       const msg = `❌ No se pudo completar después de ${MAX_ITERATIONS} intentos.\n\nProblema: El código generado no cumple los requisitos especificados.`;
       await postComment(taskId, msg);
