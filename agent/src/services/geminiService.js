@@ -173,7 +173,9 @@ Responde en JSON con este formato exacto:
 Responde SOLO con el JSON, sin explicaciones adicionales.
   `;
 
-  const text = await callGemini(prompt);
+  const raw = await callGemini(prompt);
+  // Strip markdown code fences si Gemini los incluye
+  const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
 
   try {
     return JSON.parse(text);
