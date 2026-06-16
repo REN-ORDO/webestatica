@@ -1,11 +1,85 @@
 import { getTask, postComment, updateTaskStatus } from './services/clickupService.js';
 import { generatePlan, generateCode, evaluateCode } from './services/geminiService.js';
-import { getRepoContext, createBranch, updateFile, openPullRequest } from './services/githubService.js';
+import { createBranch, updateFile, openPullRequest, getVercelPreviewUrl } from './services/githubService.js';
+import fs from 'fs';
+import path from 'path';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const GEMINI_COOLDOWN = 5000; // 5s entre llamadas a Gemini para no triggerear rate limit
 
 const MAX_ITERATIONS = parseInt(process.env.MAX_ITERATIONS) || 3;
+
+// Leer archivo actual del proyecto local
+function readProjectFile(filename) {
+  const filePath = path.join(process.cwd(), '..', filename);
+  try {
+    return fs.readFileSync(filePath, 'utf8');
+  } catch (e) {
+    console.warn(`No se encontró ${filename}`);
+    return '';
+  }
+}
+
+// Inyectar parche HTML en posición indicada por Gemini
+function applyHtmlPatch(originalHtml, htmlPatch, position) {
+  if (!htmlPatch || !htmlPatch.trim()) return originalHtml;
+
+  const pos = (position || 'before_footer').trim();
+
+  if (pos === 'before_footer') {
+    return originalHtml.replace('</footer>', `${htmlPatch}\n</footer>`);
+  }
+
+  if (pos.startsWith('after_#')) {
+    const id = pos.replace('after_#', '');
+    // Buscar cierre de sección con ese id
+    const regex = new RegExp(`(<section[^>]*id=["']${id}["'][^>]*>[\\s\\S]*?<\\/section>)`, 'i');
+    const match = originalHtml.match(regex);
+    if (match) {
+      return originalHtml.replace(match[0], `${match[0]}\n${htmlPatch}`);
+    }
+    // fallback: before footer
+    return originalHtml.replace('</footer>', `${htmlPatch}\n</footer>`);
+  }
+
+  if (pos.startsWith('replace_#')) {
+    const id = pos.replace('replace_#', '');
+    const regex = new RegExp(`<section[^>]*id=["']${id}["'][^>]*>[\\s\\S]*?<\\/section>`, 'i');
+    return originalHtml.replace(regex, htmlPatch);
+  }
+
+  // fallback
+  return originalHtml.replace('</footer>', `${htmlPatch}\n</footer>`);
+}
+
+// Agregar reglas CSS al final del archivo
+function applyCssPatch(originalCss, cssPatch) {
+  if (!cssPatch || !cssPatch.trim()) return originalCss;
+  return `${originalCss}\n\n/* ===== Cambios agente IA ===== */\n${cssPatch}`;
+}
+
+// Parsear respuesta de Gemini con formato patch
+function parseCodeResponse(codeResponse) {
+  const positionMatch = codeResponse.match(/---POSITION---([\s\S]*?)---HTML-PATCH---/);
+  const htmlMatch = codeResponse.match(/---HTML-PATCH---([\s\S]*?)---CSS-PATCH---/);
+  const cssMatch = codeResponse.match(/---CSS-PATCH---([\s\S]*?)$/);
+
+  // Fallback: formato viejo ---HTML--- / ---CSS--- (por si Gemini no sigue el nuevo)
+  if (!htmlMatch) {
+    const [htmlPart, cssPart] = codeResponse.split('---CSS---');
+    return {
+      position: 'before_footer',
+      htmlPatch: htmlPart?.replace('---HTML---', '').trim() || '',
+      cssPatch: cssPart?.trim() || ''
+    };
+  }
+
+  return {
+    position: positionMatch?.[1]?.trim() || 'before_footer',
+    htmlPatch: htmlMatch?.[1]?.trim() || '',
+    cssPatch: cssMatch?.[1]?.trim() || ''
+  };
+}
 
 export async function agentLoop(taskId, taskTitle, taskDescription) {
   console.log(`\n${'='.repeat(60)}`);
@@ -15,6 +89,8 @@ export async function agentLoop(taskId, taskTitle, taskDescription) {
   let iteration = 0;
   let cumple = false;
   let prUrl = null;
+  let prNumber = null;
+  let evaluation = null;
 
   try {
     // Paso 1: Obtener detalles de la tarea
@@ -39,27 +115,30 @@ export async function agentLoop(taskId, taskTitle, taskDescription) {
       console.log(`🔁 ITERACIÓN ${iteration}/${MAX_ITERATIONS}`);
       console.log(`${'─'.repeat(60)}\n`);
 
-      // Generar código
+      // Generar parche de código
       await sleep(GEMINI_COOLDOWN);
-      console.log('💻 Generando código...');
+      console.log('💻 Generando código (modo parche)...');
       const codeResponse = await generateCode(
         task.name,
         task.description,
-        iteration > 1 ? 'Por favor, intenta corregir los problemas identificados.' : ''
+        iteration > 1 ? 'Intenta corregir los problemas identificados sin reescribir archivos completos.' : ''
       );
 
-      const [htmlPart, cssPart] = codeResponse.split('---CSS---');
-      const generatedHtml = htmlPart.replace('---HTML---', '').trim();
-      const generatedCss = cssPart.trim();
+      const { position, htmlPatch, cssPatch } = parseCodeResponse(codeResponse);
+      console.log(`   ✓ Parche generado (posición: ${position})\n`);
 
-      console.log('   ✓ Código generado\n');
+      // Aplicar parche sobre archivos actuales
+      const originalHtml = readProjectFile('index.html');
+      const originalCss = readProjectFile('estilos.css');
+      const patchedHtml = applyHtmlPatch(originalHtml, htmlPatch, position);
+      const patchedCss = applyCssPatch(originalCss, cssPatch);
 
       // Evaluar código
       await sleep(GEMINI_COOLDOWN);
       console.log('🧪 Evaluando código generado...');
-      const evaluation = await evaluateCode(
-        generatedHtml,
-        generatedCss,
+      evaluation = await evaluateCode(
+        htmlPatch,
+        cssPatch,
         task.description,
         task.description
       );
@@ -77,15 +156,15 @@ export async function agentLoop(taskId, taskTitle, taskDescription) {
         cumple = true;
         console.log('✅ CÓDIGO CUMPLE LOS REQUISITOS\n');
 
-        // Crear rama y abrir PR
+        // Crear rama y abrir PR con archivos parcheados
         console.log('🌳 Paso 6: Creando rama en GitHub...');
         const timestamp = Date.now();
         const branchName = `feature/clickup-${taskId}-${timestamp}`;
         await createBranch(branchName);
 
-        console.log('📝 Paso 7: Actualizando archivos...');
-        await updateFile('index.html', generatedHtml, branchName, `Feature: ${task.name}`);
-        await updateFile('estilos.css', generatedCss, branchName, `Estilos para: ${task.name}`);
+        console.log('📝 Paso 7: Aplicando parche en GitHub...');
+        await updateFile('index.html', patchedHtml, branchName, `Feature: ${task.name}`);
+        await updateFile('estilos.css', patchedCss, branchName, `Estilos para: ${task.name}`);
 
         console.log('🔗 Paso 8: Abriendo Pull Request...');
         const prBody = `## ¿Qué cambia en el sitio?
@@ -115,8 +194,9 @@ ${plan.tecnico}
 ## Calidad
 
 - [x] Código evaluado automáticamente por Gemini (score ${evaluation.score}/100)
-- [x] HTML y CSS generados manteniendo la estructura existente del sitio
-- [ ] Revisión manual por el equipo antes de mergear
+- [x] Solo se agregaron/modificaron los elementos necesarios (modo parche)
+- [x] Estructura existente del sitio preservada
+- [ ] Revisión visual antes de mergear
 
 ## ¿Es incompatible con la versión actual?
 
@@ -125,36 +205,46 @@ ${plan.tecnico}
 ## Información adicional
 
 > Implementación automática generada por el agente IA en ${iteration} iteración(es).
-> Revisar visualmente el sitio antes de aprobar el PR.`;
+> Posición de inserción: \`${position}\`
+> ⚠️ Revisar visualmente el preview antes de aprobar.`;
 
-        prUrl = await openPullRequest(
-          branchName,
-          `✨ ${task.name}`,
-          prBody
-        );
+        const result = await openPullRequest(branchName, `✨ ${task.name}`, prBody);
+        prUrl = result.prUrl;
+        prNumber = result.prNumber;
 
         console.log('\n✨ ÉXITO - PR abierto\n');
+
+        // Esperar preview URL de Vercel
+        console.log('🔍 Esperando URL de preview Vercel...');
+        const previewUrl = await getVercelPreviewUrl(prNumber, 60000);
+        if (previewUrl) {
+          console.log(`   ✓ Preview: ${previewUrl}`);
+        }
+
+        // Comment final en ClickUp con preview URL si está disponible
+        const previewLine = previewUrl
+          ? `\n\n👁️ **Preview del sitio:** ${previewUrl}`
+          : '\n\n👁️ Vercel generará una URL de preview del sitio en unos minutos.';
+
+        await postComment(
+          taskId,
+          `✅ **Listo para revisión**\n\n${plan.resumen}\n\n🔗 Pull Request: ${prUrl}${previewLine}\n\nRevisa el sitio en el preview, aprueba el PR y haz merge cuando esté listo.`
+        );
+
+        await updateTaskStatus(taskId, 'PR');
+        console.log('\n🎉 TAREA MOVIDA A PR EN CLICKUP\n');
       } else {
         if (iteration < MAX_ITERATIONS) {
           console.log(`⚠️  No cumple. Iterando (${iteration}/${MAX_ITERATIONS})...\n`);
           await postComment(
             taskId,
-            `⚠️ **Iteración ${iteration}**: El código no cumple todos los requisitos.\n\nProblemas:\n${evaluation.problemas.map(p => `- ${p}`).join('\n')}\n\nIntentando de nuevo...`
+            `⚠️ **Iteración ${iteration}**: El parche generado no cumple todos los requisitos.\n\nProblemas:\n${evaluation.problemas.map(p => `- ${p}`).join('\n')}\n\nIntentando de nuevo...`
           );
         }
       }
     }
 
-    // Paso final: Notificar resultado
-    if (cumple && prUrl) {
-      await postComment(
-        taskId,
-        `✅ **Listo para revisión**\n\n${plan.resumen}\n\n🔗 Pull Request: ${prUrl}\n\nRevisa el PR, apruébalo y haz merge cuando esté listo.`
-      );
-
-      await updateTaskStatus(taskId, 'PR');
-      console.log('\n🎉 TAREA MOVIDA A PR EN CLICKUP\n');
-    } else {
+    if (!cumple) {
       const msg = `❌ No se pudo completar después de ${MAX_ITERATIONS} intentos.\n\nProblema: El código generado no cumple los requisitos especificados.`;
       await postComment(taskId, msg);
       console.log(`\n${msg}\n`);

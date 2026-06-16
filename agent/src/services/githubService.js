@@ -86,9 +86,49 @@ export async function openPullRequest(branchName, title, description) {
     });
 
     const prUrl = response.data.html_url;
+    const prNumber = response.data.number;
     console.log(`🔗 PR abierto: ${prUrl}`);
-    return prUrl;
+    return { prUrl, prNumber };
   } catch (err) {
     throw new Error(`GitHub openPullRequest fallo: ${err.message}`);
   }
+}
+
+export async function getVercelPreviewUrl(prNumber, maxWaitMs = 60000) {
+  // Vercel crea deployments en el PR como GitHub Deployments
+  // Espera hasta maxWaitMs a que aparezca la URL de preview
+  const interval = 5000;
+  const maxAttempts = Math.floor(maxWaitMs / interval);
+
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      const response = await client.get(
+        `/repos/${OWNER}/${REPO}/deployments?ref=refs/pull/${prNumber}/head&per_page=5`
+      );
+
+      const vercelDeploy = response.data.find(d =>
+        d.environment?.toLowerCase().includes('preview') ||
+        d.creator?.login === 'vercel[bot]'
+      );
+
+      if (vercelDeploy) {
+        const statusRes = await client.get(
+          `/repos/${OWNER}/${REPO}/deployments/${vercelDeploy.id}/statuses`
+        );
+        const activeStatus = statusRes.data.find(s => s.state === 'success' && s.environment_url);
+        if (activeStatus?.environment_url) {
+          console.log(`🔍 Preview URL: ${activeStatus.environment_url}`);
+          return activeStatus.environment_url;
+        }
+      }
+    } catch (e) {
+      // ignorar errores de polling
+    }
+
+    if (i < maxAttempts - 1) {
+      await new Promise(r => setTimeout(r, interval));
+    }
+  }
+
+  return null; // timeout sin URL
 }

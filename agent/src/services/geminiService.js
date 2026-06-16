@@ -118,13 +118,13 @@ export async function generateCode(taskTitle, taskDescription, feedback = '') {
   const { html, css } = getProjectContext();
 
   let prompt = `
-Eres un desarrollador front-end experto. Tu tarea es generar HTML y CSS para implementar esta solicitud:
+Eres un desarrollador front-end experto. Tu tarea es generar ÚNICAMENTE el código nuevo o modificado para implementar esta solicitud. NO reescribas los archivos completos.
 
 SOLICITUD:
 Título: ${taskTitle}
 Descripción: ${taskDescription}
 
-PROYECTO ACTUAL:
+PROYECTO ACTUAL (NO lo reescribas, solo agrega/modifica lo necesario):
 \`\`\`html
 ${html}
 \`\`\`
@@ -133,21 +133,28 @@ ${html}
 ${css}
 \`\`\`
 
-Genera SOLO el código HTML y CSS que debe agregarse o modificarse. Responde en este formato exacto:
+INSTRUCCIONES CRÍTICAS:
+1. Solo genera el HTML de la nueva sección o el elemento modificado — NO el documento completo
+2. Solo genera las reglas CSS nuevas o modificadas — NO el stylesheet completo
+3. Especifica DÓNDE insertar el HTML usando una de estas posiciones:
+   - before_footer → justo antes de </footer>
+   - after_#inicio → después de la sección con id="inicio"
+   - after_#nosotros → después de la sección con id="nosotros"
+   - after_#servicios → después de la sección con id="servicios"
+   - replace_#id → reemplaza el elemento con ese id
 
----HTML---
-(aquí el código HTML)
----CSS---
-(aquí el código CSS)
+Responde EXACTAMENTE en este formato:
 
-Asegúrate de:
-- Mantener la estructura existente
-- Usar clases CSS consistentes
-- Agregar comentarios donde sea necesario
+---POSITION---
+(una sola posición de la lista de arriba)
+---HTML-PATCH---
+(solo el HTML nuevo o modificado, no el documento completo)
+---CSS-PATCH---
+(solo las reglas CSS nuevas o modificadas, no el stylesheet completo)
 `;
 
   if (feedback) {
-    prompt += `\n\nFEEDBACK DE ITERACIÓN ANTERIOR:\n${feedback}\n\nIntenta corregir los problemas identificados.`;
+    prompt += `\n\nFEEDBACK DE ITERACIÓN ANTERIOR:\n${feedback}\n\nCorrige los problemas sin reescribir archivos completos.`;
   }
 
   return await callGemini(prompt);
