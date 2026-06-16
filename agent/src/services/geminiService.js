@@ -118,13 +118,13 @@ export async function generateCode(taskTitle, taskDescription, feedback = '') {
   const { html, css } = getProjectContext();
 
   let prompt = `
-Eres un desarrollador front-end experto. Tu tarea es generar ÚNICAMENTE el código nuevo o modificado para implementar esta solicitud. NO reescribas los archivos completos.
+Eres un desarrollador front-end experto. Modifica el sitio web KagsBeer para implementar la siguiente solicitud.
 
 SOLICITUD:
 Título: ${taskTitle}
 Descripción: ${taskDescription}
 
-PROYECTO ACTUAL (NO lo reescribas, solo agrega/modifica lo necesario):
+PROYECTO ACTUAL:
 \`\`\`html
 ${html}
 \`\`\`
@@ -133,28 +133,30 @@ ${html}
 ${css}
 \`\`\`
 
-INSTRUCCIONES CRÍTICAS:
-1. Solo genera el HTML de la nueva sección o el elemento modificado — NO el documento completo
-2. Solo genera las reglas CSS nuevas o modificadas — NO el stylesheet completo
-3. Especifica DÓNDE insertar el HTML usando una de estas posiciones:
-   - before_footer → justo antes de </footer>
-   - after_#inicio → después de la sección con id="inicio"
-   - after_#nosotros → después de la sección con id="nosotros"
-   - after_#servicios → después de la sección con id="servicios"
-   - replace_#id → reemplaza el elemento con ese id
+RESTRICCIONES CRÍTICAS — NO CAMBIAR BAJO NINGUNA CIRCUNSTANCIA:
+- Fondo: background-color #302e2e (gris oscuro) — NUNCA fondo blanco o claro
+- Color de acento: #e5cc2b (dorado) — usar en hover, bordes decorativos, highlights
+- Color de texto: #fff (blanco) sobre fondo oscuro
+- Estructura de secciones: mantener IDs #inicio, #nosotros, #servicios, footer
+- Font Awesome CDN para íconos — no reemplazar
+- Sin frameworks externos (sin Bootstrap, sin Tailwind, sin jQuery)
+- Todo el contenido en español
+
+INSTRUCCIONES:
+1. Reescribe index.html COMPLETO con los cambios integrados
+2. Reescribe estilos.css COMPLETO con los estilos nuevos integrados
+3. Los archivos deben ser funcionales y completos, no fragmentos
 
 Responde EXACTAMENTE en este formato:
 
----POSITION---
-(una sola posición de la lista de arriba)
----HTML-PATCH---
-(solo el HTML nuevo o modificado, no el documento completo)
----CSS-PATCH---
-(solo las reglas CSS nuevas o modificadas, no el stylesheet completo)
+---HTML---
+(index.html completo con los cambios)
+---CSS---
+(estilos.css completo con los cambios)
 `;
 
   if (feedback) {
-    prompt += `\n\nFEEDBACK DE ITERACIÓN ANTERIOR:\n${feedback}\n\nCorrige los problemas sin reescribir archivos completos.`;
+    prompt += `\n\nFEEDBACK DE ITERACIÓN ANTERIOR:\n${feedback}\n\nCorrige los problemas manteniendo siempre el diseño oscuro con fondo #302e2e.`;
   }
 
   return await callGemini(prompt);
