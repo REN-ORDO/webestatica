@@ -14,7 +14,7 @@ const client = axios.create({
 
 export async function getTask(taskId) {
   try {
-    const { data } = await client.get(`/task/${taskId}?include=description`);
+    const { data } = await client.get(`/task/${taskId}`);
 
     // Validar que la tarea pertenece al space correcto
     if (SPACE_ID && data.space?.id !== SPACE_ID) {
