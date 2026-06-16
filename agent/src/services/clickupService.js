@@ -7,7 +7,7 @@ const SPACE_ID = process.env.CLICKUP_SPACE_ID;
 const client = axios.create({
   baseURL: CLICKUP_API,
   headers: {
-    'Authorization': TOKEN,
+    'Authorization': `Bearer ${TOKEN}`,
     'Content-Type': 'application/json'
   }
 });
